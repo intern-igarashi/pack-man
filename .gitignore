@@ -11,3 +11,10 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+
+Library
+Temp
+*.pidb
+*.unityproj
+*.sln
+*.userprefs
