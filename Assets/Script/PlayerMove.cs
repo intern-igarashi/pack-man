@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
 			transform.rotation = START_ROTATION*Quaternion.Euler (0, 0 , 0);
 		}
 
-		transform.position += transform.forward*MOVE_SPEED;
+		transform.position += transform.forward*MOVE_SPEED*Time.deltaTime;
 	}
 }
 

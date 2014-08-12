@@ -5,59 +5,41 @@ using System.IO;
 
 public class LoadingFile : MonoBehaviour
 {
-	public class Layer2D
+	// 定数
+	public int WIDTH = 19;
+	public int HEIGHT = 23;
+
+	// 外部ファイルからのデータを保存
+	string[] stageDateArray;
+
+	// 読み込むファイルの名前
+	string FileName = "stage";
+
+	// デバック表示
+	void Debug()
 	{
-		public int width;
-		public int height;
-		private int[] array = null;
-
-
-		public void Create(int width, int height)
+		for (int y = 0; y < HEIGHT; y++) 
 		{
-			this.width = width;
-			this.height = height;
-			array = new int[width*height];
-		}
-
-		public int Get(int x, int y)
-		{
-			if (x < 0 || x >= width) { return -1; }
-			if (y < 0 || y >= height) { return -1; }
-			return array [y * height + x];
-		}
-
-		public void Set(int x, int y, int value)
-		{
-			if (x < 0 || x >= width) { return; }
-			if (y < 0 || y >= height) { return; }
-			array [y * height + x] = value;
-		}
-
-		public void Debug()
-		{
-			print ("[Layer2D] (w,h)=(" + width + "," + height + ")");
-			for (int y = 0; y < height; y++)
+			string s = "";
+			for (int x = 0; x < WIDTH; x++)
 			{
-				string s = "";
-				for (int x = 0; x < width; x++)
-				{
-					s += Get (x, y) + ",";
-				}
-				print (s);
+				s += stageDateArray[y*WIDTH+x]+",";
 			}
+			print (s);
 		}
 	}
-	
+	public string[] SetDateValue()
+	{
+		TextAsset stage = Resources.Load (FileName) as TextAsset;
+		stageDateArray = stage.text.Split (new string[]{"\r","\n", ","}, System.StringSplitOptions.RemoveEmptyEntries);
+		return stageDateArray;
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
-		TextAsset stage = Resources.Load ("stage_date") as TextAsset;
-
-		string[] stageArrayDate = stage.text.Split (new string[]{"\r","\n"}, System.StringSplitOptions.RemoveEmptyEntries);
-		for (int y = 0; y < stageArrayDate.Length; y++) 
-		{
-			print (stageArrayDate[y]);
-		}
+		SetDateValue ();
+		Debug ();
 	}
 	
 	// Update is called once per frame
