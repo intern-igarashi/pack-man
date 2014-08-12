@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour 
 {
-	private const float MOVE_SPEED = 0.1f; 
+	private const float MOVE_SPEED = 2.0f; 
 
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
 

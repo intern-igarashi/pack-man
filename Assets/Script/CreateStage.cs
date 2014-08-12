@@ -47,10 +47,13 @@ public class CreateStage : MonoBehaviour
 					createObject = cube;
 					break;
 				case "6":
-					createObject = player;
+					createObject = pathway;
 					break;
 				case "7":
 					createObject = cube;
+					break;
+				case "8":
+					createObject = player;
 					break;
 				}
 				Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.Euler(0f, 0f, 0f));
