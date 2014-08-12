@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CreateStage : MonoBehaviour 
 {
 	// ゲームオブジェクト
 	// インスペクターで設定
-	public GameObject cube;
-	public GameObject pathway;
-	public GameObject player;
+	public static GameObject cube;
+	public static GameObject pathway;
+	public static GameObject player;
 
 	// 外部ファイルからのデータ
 	string[] stageDate;
@@ -18,6 +19,17 @@ public class CreateStage : MonoBehaviour
 	const float OFFSET_Y = 11.0f;
 	const float OFFSET_X = -9.0f;
 
+	Dictionary<string, GameObject> ObjectType;
+
+	void ObjectTypeInit()
+	{
+		GameObject[] ObjectName = {cube, cube, cube, cube, cube, cube, pathway, cube, player};
+		for (int itr = 0; itr < ObjectName.Length; itr++) 
+		{
+			ObjectType.Add ("0"+itr, ObjectName[itr]);
+		}
+	}
+
 	// ステージの生成
 	void Create(int h, int w, string[] date)
 	{
@@ -26,36 +38,8 @@ public class CreateStage : MonoBehaviour
 		{
 			for (int x = 0; x < w; x++)
 			{
-				switch (date[y*w+x])
-				{
-				case "0":
-					createObject = cube;
-					break;
-				case "1":
-					createObject = cube;
-					break;
-				case "2":
-					createObject = cube;
-					break;
-				case "3":
-					createObject = cube;
-					break;
-				case "4":
-					createObject = cube;
-					break;
-				case "5":
-					createObject = cube;
-					break;
-				case "6":
-					createObject = pathway;
-					break;
-				case "7":
-					createObject = cube;
-					break;
-				case "8":
-					createObject = player;
-					break;
-				}
+				string dateType = date[y*w+x];
+				createObject = ObjectType[dateType];
 				Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.Euler(0f, 0f, 0f));
 			}
 		}

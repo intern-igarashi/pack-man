@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
-
-
 
 public class LoadingFile : MonoBehaviour
 {
@@ -14,10 +13,26 @@ public class LoadingFile : MonoBehaviour
 	// 外部ファイルからのデータを保存
 	string[] stageDateArray;
 
+	//
+	string[] ALL_FILE_NAME = {"stage_date", "stage_date_2"};
+
 	// 読み込むファイルの名前
 	string FileName;
-
+	
+	// 
 	GameObject manager;
+
+	// 読み込むファイル名を保存
+	static Dictionary<int, string> loadFile;
+
+	void FileDictinaryInit()
+	{
+		loadFile = new Dictionary<int, string>();
+		for (int itr = 0; itr < ALL_FILE_NAME.Length; itr++) 
+		{
+			loadFile[itr] = ALL_FILE_NAME[itr];
+		}
+	}
 
 	// デバック表示
 	void Debug()
@@ -36,16 +51,9 @@ public class LoadingFile : MonoBehaviour
 	void LoadFileSelect()
 	{
 		manager = GameObject.Find("GameManager");
+		FileDictinaryInit ();
 		int level = manager.GetComponent<GameManager>().GetSelectLevel();
-		switch (level) 
-		{
-		case 0:
-			FileName = "stage_date";
-			break;
-		case 1:
-			FileName = "stage_date_2";
-			break;
-		}
+		FileName = loadFile[level];
 	}
 
 	// マップデータの生成

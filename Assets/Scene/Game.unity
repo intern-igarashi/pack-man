@@ -184,9 +184,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88a87bcc7564ad9449451a1c7927dce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cube: {fileID: 100000, guid: c6988893122300f44be145148dd90cff, type: 2}
-  pathway: {fileID: 100000, guid: 220cbaeb217144b48957dbf96da90016, type: 2}
-  player: {fileID: 100000, guid: 0d352523503788744a4be46bee8e11d7, type: 2}
+--- !u!1 &1188286209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1188286211}
+  - 114: {fileID: 1188286210}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1188286210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1188286209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536d884b4ee60df45899714a0418d69c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1188286211
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1188286209}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .0285663605, y: -1.63807487, z: -20}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1 &1463455256
 GameObject:
   m_ObjectHideFlags: 0
