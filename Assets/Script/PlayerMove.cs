@@ -85,6 +85,10 @@ public class PlayerMove : MonoBehaviour
 			isHitWall = true;
 			transform.position = beforeUpdatePosition;
 		}
+		else if (hit.transform.tag == "pathway") 
+		{
+			DestroyObject(hit.gameObject);
+		}
 	}
 }
 
