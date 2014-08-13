@@ -14,10 +14,13 @@ public class LoadingFile : MonoBehaviour
 	string[] stageDateArray;
 
 	//
-	string[] ALL_FILE_NAME = {"stage_date", "stage_date_2"};
+	string[] ALL_FILE_NAME = {"StageDate/stage_date", "stage_date_2"};
+
+	//
+	string filePass = "StageDate/";
 
 	// 読み込むファイルの名前
-	string FileName;
+	string fileName;
 	
 	// 
 	GameObject manager;
@@ -53,14 +56,14 @@ public class LoadingFile : MonoBehaviour
 		manager = GameObject.Find("GameManager");
 		FileDictinaryInit ();
 		int level = manager.GetComponent<GameManager>().GetSelectLevel();
-		FileName = loadFile[level];
+		fileName = loadFile[level];
 	}
 
 	// マップデータの生成
 	public string[] SetDateValue()
 	{
 		LoadFileSelect ();
-		TextAsset stage = Resources.Load (FileName+".csv") as TextAsset;
+		TextAsset stage = Resources.Load (fileName+".csv") as TextAsset;
 		stageDateArray = stage.text.Split (new string[]{"\r","\n", ","}, System.StringSplitOptions.RemoveEmptyEntries);
 		return stageDateArray;
 	}
