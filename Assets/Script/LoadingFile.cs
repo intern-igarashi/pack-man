@@ -11,18 +11,18 @@ public class LoadingFile : MonoBehaviour
 	public int HEIGHT = 23;
 
 	// 外部ファイルからのデータを保存
-	string[] stageDateArray;
+	string[] stageDataArray;
+
+	// 読み込むすべてのファイル
+	string[] ALL_FILE_NAME = {"StageData/stage_date", "stage_date_2"};
 
 	//
-	string[] ALL_FILE_NAME = {"StageDate/stage_date", "stage_date_2"};
-
-	//
-	string filePass = "StageDate/";
+	//string filePass = "StageData/";
 
 	// 読み込むファイルの名前
 	string fileName;
 	
-	// 
+	// ゲームマネージャーを保存
 	GameObject manager;
 
 	// 読み込むファイル名を保存
@@ -45,7 +45,7 @@ public class LoadingFile : MonoBehaviour
 			string s = "";
 			for (int x = 0; x < WIDTH; x++)
 			{
-				s += stageDateArray[y*WIDTH+x]+",";
+				s += stageDataArray[y*WIDTH+x]+",";
 			}
 			print (s);
 		}
@@ -60,23 +60,18 @@ public class LoadingFile : MonoBehaviour
 	}
 
 	// マップデータの生成
-	public string[] SetDateValue()
+	public string[] SetDataValue()
 	{
 		LoadFileSelect ();
 		TextAsset stage = Resources.Load (fileName+".csv") as TextAsset;
-		stageDateArray = stage.text.Split (new string[]{"\r","\n", ","}, System.StringSplitOptions.RemoveEmptyEntries);
-		return stageDateArray;
+		stageDataArray = stage.text.Split (new string[]{"\r","\n", ","}, System.StringSplitOptions.RemoveEmptyEntries);
+		return stageDataArray;
 	}
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
-		SetDateValue ();
-		Debug ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		//SetDataValue ();
+		//Debug ();
 	}
 }
