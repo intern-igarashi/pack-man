@@ -3,8 +3,12 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour 
 {
-	private const float MOVE_SPEED = 1.5f; 
+	//
+	const float MOVE_SPEED = 1.5f;
+	const float X_MAX = 9.5f;
+	const float X_MIN = -9.5f;
 
+	//
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
 
 	// 1フレーム前のポジションを記憶
@@ -13,8 +17,6 @@ public class PlayerMove : MonoBehaviour
 	//
 	bool isHitWall;
 
-	RaycastHit ray;
-
 	// Use this for initialization
 	void Start () 
 	{
@@ -22,7 +24,6 @@ public class PlayerMove : MonoBehaviour
 		beforeUpdatePosition = transform.position;
 		isHitWall = false;
 		collider.isTrigger = true;
-		ray = new RaycastHit ();
 	}
 	
 	// Update is called once per frame
@@ -59,14 +60,14 @@ public class PlayerMove : MonoBehaviour
 
 		transform.position += transform.forward*speed*Time.deltaTime;
 
-		if (Physics.Raycast (transform.position, Vector3.forward, out ray, 2.0f))
+		if (transform.position.x < X_MIN) 
 		{
-			Debug.Log ("hit");
-			float hitDistance = ray.distance;
-			Vector3 hitPosition = ray.point;
-			transform.position = hitPosition + Vector3.back*hitDistance;
+			transform.position = new Vector3(X_MAX, transform.position.y, 0);
 		}
-
+		else if (transform.position.x > X_MAX) 
+		{
+			transform.position = new Vector3(X_MIN, transform.position.y, 0);
+		}
 	}
 
 	void OnTriggerEnter(Collider collider)
@@ -85,7 +86,7 @@ public class PlayerMove : MonoBehaviour
 			isHitWall = true;
 			transform.position = beforeUpdatePosition;
 		}
-		else if (hit.transform.tag == "pathway") 
+		else if (hit.transform.tag == "dot") 
 		{
 			DestroyObject(hit.gameObject);
 		}
