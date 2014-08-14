@@ -13,7 +13,7 @@ public class LoadingFile : MonoBehaviour
 	// 外部ファイルからのデータを保存
 	string[] stageDataArray;
 
-	// 読み込むすべてのファイル
+	// 読み込むすべてのファイル名
 	string[] ALL_FILE_NAME = {"StageData/stage_date", "stage_date_2"};
 
 	//
@@ -51,6 +51,7 @@ public class LoadingFile : MonoBehaviour
 		}
 	}
 
+	// ステージのレベルによって読み込むファイルを変える
 	void LoadFileSelect()
 	{
 		manager = GameObject.Find("GameManager");

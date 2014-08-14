@@ -18,13 +18,15 @@ public class CreateStage : MonoBehaviour
 	// ポジションの補正
 	const float OFFSET_Y = 11.0f;
 	const float OFFSET_X = -9.0f;
-	
+
+	// 
 	Dictionary<string, GameObject> ObjectType;
-	public Dictionary<int, int> PlayerStartArrayPos;
+	Dictionary<int, int> PlayerStartArrayPos;
 	
 	public float GetOffsetX() { return OFFSET_X; }
 	public float GetOffsetY() { return OFFSET_Y; }
 	
+	//
 	void ObjectTypeInit()
 	{
 		GameObject[] ObjectName = {

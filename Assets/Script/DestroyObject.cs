@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DestroyObject : MonoBehaviour {
+// デバック用のScript
+// コマンドでオブジェクトの全消去
+
+public class DestroyObject : MonoBehaviour
+{
 
 	// Use this for initialization
 	void Start () {

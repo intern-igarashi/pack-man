@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerMove : MonoBehaviour 
 {
 	//
-	const float MOVE_SPEED = 1.5f;
+	const float MOVE_SPEED = 3.0f;
 	const float X_MAX = 9.5f;
 	const float X_MIN = -9.5f;
 
