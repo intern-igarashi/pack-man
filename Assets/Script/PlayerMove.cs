@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour 
+public class PlayerMove : Photon.MonoBehaviour 
 {
 	//
 	const float MOVE_SPEED = 1.5f;
@@ -32,6 +32,29 @@ public class PlayerMove : MonoBehaviour
 		float speed = MOVE_SPEED;
 		beforeUpdatePosition = transform.position;
 
+		if (photonView.isMine)
+		{
+			GetInputKey();
+		}
+
+		if (isHitWall)
+		{
+			speed = 0;
+		}
+
+		transform.position += transform.forward*speed*Time.deltaTime;
+
+		if (transform.position.x < X_MIN) 
+		{
+			transform.position = new Vector3(X_MAX, transform.position.y, 0);
+		}
+		else if (transform.position.x > X_MAX) 
+		{
+			transform.position = new Vector3(X_MIN, transform.position.y, 0);
+		}
+	}
+	void GetInputKey()
+	{
 		if (Input.GetKeyDown (KeyCode.UpArrow)) 
 		{
 			isHitWall = false;
@@ -51,22 +74,6 @@ public class PlayerMove : MonoBehaviour
 		{
 			isHitWall = false;
 			transform.rotation = START_ROTATION*Quaternion.Euler (0, 0 , 0);
-		}
-
-		if (isHitWall)
-		{
-			speed = 0;
-		}
-
-		transform.position += transform.forward*speed*Time.deltaTime;
-
-		if (transform.position.x < X_MIN) 
-		{
-			transform.position = new Vector3(X_MAX, transform.position.y, 0);
-		}
-		else if (transform.position.x > X_MAX) 
-		{
-			transform.position = new Vector3(X_MIN, transform.position.y, 0);
 		}
 	}
 
