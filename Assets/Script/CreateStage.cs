@@ -8,7 +8,7 @@ public class CreateStage : MonoBehaviour
 	GameObject cube;
 	GameObject pathway;
 	GameObject dot;
-	GameObject player;
+	GameObject pacman;
 	
 	// 外部ファイルからのデータ
 	string[] stageData;
@@ -28,7 +28,7 @@ public class CreateStage : MonoBehaviour
 	void ObjectTypeInit()
 	{
 		GameObject[] ObjectName = {
-			cube, pathway, dot, null, null, null, null, player
+			cube, pathway, dot, null, null, null, null, pacman
 		};
 		for (int itr = 0; itr < ObjectName.Length; itr++) 
 		{
@@ -50,7 +50,7 @@ public class CreateStage : MonoBehaviour
 				//string dateType = date[y*w+x];
 				createObject = ObjectType[date[y*w+x]];
 				Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.Euler(0f, 0f, 0f));
-				if (createObject == player)
+				if (createObject == pacman)
 				{
 					PlayerStartArrayPos[playerNum] = y*w+x;
 					playerNum++;
@@ -75,7 +75,7 @@ public class CreateStage : MonoBehaviour
 		cube = (GameObject)Resources.Load ("Prefab/cube");
 		pathway = (GameObject)Resources.Load ("Prefab/pathway");
 		dot = (GameObject)Resources.Load ("Prefab/dot");
-		player = (GameObject)Resources.Load ("Prefab/player");
+		pacman = (GameObject)Resources.Load ("Prefab/pacman");
 		Create (height, width, stageData);
 	}
 	
