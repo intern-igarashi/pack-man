@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerMove : Photon.MonoBehaviour 
 {
@@ -16,6 +17,24 @@ public class PlayerMove : Photon.MonoBehaviour
 
 	//
 	bool isHitWall;
+	bool isInit = false;
+
+	GameObject gameManager;
+
+	Dictionary<int, Vector3> initPosition;
+
+	void PositionInit()
+	{
+		Vector3[] Pos = {
+			new Vector3(0f, -2f, 0f), new Vector3(-1f, 0f, 0f),
+			new Vector3(-1f, 0f, 0f), new Vector3(0f, 0f, 0f),
+			new Vector3(1f, 0f, 0f)
+		};
+		for (int itr = 0; itr < Pos.Length; itr++)
+		{
+			initPosition[itr] = Pos[itr];
+		}
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -24,35 +43,48 @@ public class PlayerMove : Photon.MonoBehaviour
 		beforeUpdatePosition = transform.position;
 		isHitWall = false;
 		collider.isTrigger = true;
+		gameManager = GameObject.FindWithTag ("GameManager");
+		initPosition = new Dictionary<int, Vector3> ();
+		PositionInit ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		float speed = MOVE_SPEED;
-		beforeUpdatePosition = transform.position;
+//		if (gameManager.GetComponent<GameManager>().isPlayerGame)
+//		{
+			if (!isInit)
+			{
+				transform.position = initPosition[gameManager.GetComponent<GameManager>().GetControlPlayerType()];
+				isInit = true;
+			}
+			float speed = MOVE_SPEED;
+			beforeUpdatePosition = transform.position;
 
-		if (photonView.isMine)
-		{
-			GetInputKey();
-		}
 
-		if (isHitWall)
-		{
-			speed = 0;
-		}
+			if (photonView.isMine)
+			{
+				GetInputKey();
+			}
 
-		transform.position += transform.forward*speed*Time.deltaTime;
+			if (isHitWall)
+			{
+				speed = 0;
+			}
 
-		if (transform.position.x < X_MIN) 
-		{
-			transform.position = new Vector3(X_MAX, transform.position.y, 0);
-		}
-		else if (transform.position.x > X_MAX) 
-		{
-			transform.position = new Vector3(X_MIN, transform.position.y, 0);
-		}
+			transform.position += transform.forward*speed*Time.deltaTime;
+
+			if (transform.position.x < X_MIN) 
+			{
+				transform.position = new Vector3(X_MAX, transform.position.y, 0);
+			}
+			else if (transform.position.x > X_MAX) 
+			{
+				transform.position = new Vector3(X_MIN, transform.position.y, 0);
+			}
+//		}
 	}
+
 	void GetInputKey()
 	{
 		if (Input.GetKeyDown (KeyCode.UpArrow)) 
@@ -95,7 +127,7 @@ public class PlayerMove : Photon.MonoBehaviour
 		}
 		else if (hit.transform.tag == "dot") 
 		{
-			DestroyObject(hit.gameObject);
+			PhotonNetwork.Destroy(hit.gameObject);
 		}
 	}
 }

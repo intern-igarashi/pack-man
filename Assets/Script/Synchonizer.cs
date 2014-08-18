@@ -7,7 +7,6 @@ public class Synchonizer : Photon.MonoBehaviour
 	private Quaternion receiveRotation = Quaternion.identity;
 	private bool warp = false;
 
-
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.isWriting) 
@@ -26,8 +25,8 @@ public class Synchonizer : Photon.MonoBehaviour
 
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
 	}
 	
 	// Update is called once per frame
@@ -35,7 +34,8 @@ public class Synchonizer : Photon.MonoBehaviour
 	{
 		if (!photonView.isMine) 
 		{
-			if(!warp)
+			float dis = Vector3.SqrMagnitude(receivePosition-transform.position);
+			if(dis < 1f)
 			{
 				transform.position = Vector3.Lerp(transform.position, receivePosition, Time.deltaTime*10);
 			}
