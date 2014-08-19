@@ -2,13 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CreateStage : MonoBehaviour 
+public class CreateStage : Photon.MonoBehaviour 
 {
+	const string FILE_PATH = "Prefab/";
+
 	// ゲームオブジェクト
-	GameObject cube;
-	GameObject pathway;
-	GameObject dot;
-	GameObject pacman;
+	string cube = "cube";
+	string pathway = "pathway";
+	string dot = "dot";
+	string pacman = "pacman";
 	
 	// 外部ファイルからのデータ
 	string[] stageData;
@@ -19,7 +21,7 @@ public class CreateStage : MonoBehaviour
 	const float OFFSET_Y = 11.0f;
 	const float OFFSET_X = -9.0f;
 	
-	Dictionary<string, GameObject> ObjectType;
+	Dictionary<string, string> ObjectType;
 	public Dictionary<int, int> PlayerStartArrayPos;
 	
 	public float GetOffsetX() { return OFFSET_X; }
@@ -27,19 +29,19 @@ public class CreateStage : MonoBehaviour
 	
 	void ObjectTypeInit()
 	{
-		GameObject[] ObjectName = {
+		string[] ObjectName = {
 			cube, pathway, dot, null, null, null, null, pacman
 		};
 		for (int itr = 0; itr < ObjectName.Length; itr++) 
 		{
-			ObjectType.Add (itr.ToString(), ObjectName[itr]);
+			ObjectType.Add (itr.ToString(), FILE_PATH + ObjectName[itr]);
 		}
 	}
 	
 	// ステージの生成
 	void Create(int h, int w, string[] date)
 	{
-		GameObject createObject = null;
+		string createObject = null;
 		int playerNum = 0;
 		
 		ObjectTypeInit ();
@@ -49,19 +51,19 @@ public class CreateStage : MonoBehaviour
 			{
 				//string dateType = date[y*w+x];
 				createObject = ObjectType[date[y*w+x]];
-				Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.Euler(0f, 0f, 0f));
-				if (createObject == pacman)
-				{
-					PlayerStartArrayPos[playerNum] = y*w+x;
-					playerNum++;
-				}
+				PhotonNetwork.Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.identity, 0);
+//				if (createObject == pacman)
+//				{
+//					PlayerStartArrayPos[playerNum] = y*w+x;
+//					playerNum++;
+//				}
 			}
 		}
 	}
 	
 	void Awake()
 	{
-		ObjectType = new Dictionary<string, GameObject> ();
+		ObjectType = new Dictionary<string, string> ();
 		PlayerStartArrayPos = new Dictionary<int, int> ();
 	}
 	
@@ -72,10 +74,10 @@ public class CreateStage : MonoBehaviour
 		stageData = loadFile.SetDataValue();
 		width = loadFile.WIDTH;
 		height = loadFile.HEIGHT;
-		cube = (GameObject)Resources.Load ("Prefab/cube");
-		pathway = (GameObject)Resources.Load ("Prefab/pathway");
-		dot = (GameObject)Resources.Load ("Prefab/dot");
-		pacman = (GameObject)Resources.Load ("Prefab/pacman");
+//		cube = (GameObject)Resources.Load ("Prefab/cube");
+//		pathway = (GameObject)Resources.Load ("Prefab/pathway");
+//		dot = (GameObject)Resources.Load ("Prefab/dot");
+//		pacman = (GameObject)Resources.Load ("Prefab/pacman");
 		Create (height, width, stageData);
 	}
 	
