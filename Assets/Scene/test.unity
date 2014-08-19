@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536d884b4ee60df45899714a0418d69c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayerGame: 0
+  isPlayGame: 0
   controlPlayerType: 0
 --- !u!4 &1781962692
 Transform:
