@@ -5,7 +5,6 @@ public class Synchonizer : Photon.MonoBehaviour
 {
 	private Vector3 receivePosition = Vector3.zero;
 	private Quaternion receiveRotation = Quaternion.identity;
-	private bool warp = false;
 
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
@@ -13,13 +12,11 @@ public class Synchonizer : Photon.MonoBehaviour
 		{
 			stream.SendNext (transform.position);
 			stream.SendNext (transform.rotation);
-			stream.SendNext(warp);
 		} 
 		else 
 		{
 			receivePosition = (Vector3)stream.ReceiveNext();
 			receiveRotation = (Quaternion)stream.ReceiveNext();
-			warp = (bool)stream.ReceiveNext();
 		}
 	}
 

@@ -53,7 +53,7 @@ public class LoadingFile : MonoBehaviour
 
 	void LoadFileSelect()
 	{
-		manager = GameObject.Find("GameManager");
+		manager = GameObject.FindWithTag("GameManager");
 		FileDictinaryInit ();
 		int level = manager.GetComponent<GameManager>().GetSelectLevel();
 		fileName = loadFile[level];

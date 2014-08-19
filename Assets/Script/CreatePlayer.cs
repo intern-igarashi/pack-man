@@ -8,6 +8,15 @@ public class CreatePlayer : Photon.MonoBehaviour
 
 	int type;
 
+	enum PLAYER_TYPE
+	{
+		PACMAN = 1,
+		RED_MONSTER,
+		BLUE_MONSTER,
+		GREEN_MONSTER,
+		PINK_MONSTER
+	};
+
 	const string prefabPath = "Prefab/";
 
 	string pacmanName = prefabPath + "pacman";
@@ -18,30 +27,48 @@ public class CreatePlayer : Photon.MonoBehaviour
 
 	Dictionary<int, string> playerType;
 	
-	public void CreateRoomCharactor()
+//	public void CreateRoomCharactor()
+//	{
+//		gameManager = GameObject.FindWithTag("GameManager");
+//		type = PhotonNetwork.playerList.Length;
+//		playerTypeInit ();
+//		
+//		// ホストならパックマンになる.
+//		if (type == (int)PLAYER_TYPE.PACMAN)
+//		{
+//			PhotonNetwork.Instantiate (playerType[(int)PLAYER_TYPE.PACMAN], new Vector3(((float)type-2.5f)*3, 0f, 0f), Quaternion.identity, 0);
+//			gameManager.GetComponent<GameManager>().SetControlPlayerType((int)PLAYER_TYPE.PACMAN);
+//		}
+//		else
+//		{
+//			PhotonNetwork.Instantiate (playerType[type], new Vector3(((float)type-2.5f) * 3, 0f, 0f), Quaternion.identity, 0);
+//			gameManager.GetComponent<GameManager>().SetControlPlayerType(type);	
+//		}
+//	}
+
+	public GameObject CreateRoomCharactor()
 	{
-		gameManager = GameObject.FindWithTag("GameManager");
 		type = PhotonNetwork.playerList.Length;
 		playerTypeInit ();
-		// ホストならパックマンになる
-		if (type == 1)
+		
+		// ホストならパックマンになる.
+		if (type == (int)PLAYER_TYPE.PACMAN)
 		{
-			PhotonNetwork.Instantiate (playerType[type-1], new Vector3(((float)type-2.5f)*3, 0f, 0f), Quaternion.identity, 0);
-			gameManager.GetComponent<GameManager>().SetControlPlayerType(type-1);
+			return PhotonNetwork.Instantiate (playerType[(int)PLAYER_TYPE.PACMAN], new Vector3(((float)type-2.5f)*3, 0f, 0f), Quaternion.identity, 0);
 		}
 		else
 		{
-			PhotonNetwork.Instantiate (playerType[type], new Vector3(((float)type-2.5f)*3, 0f, 0f), Quaternion.identity, 0);
-			gameManager.GetComponent<GameManager>().SetControlPlayerType(type);	
+			return PhotonNetwork.Instantiate (playerType[type], new Vector3(((float)type-2.5f) * 3, 0f, 0f), Quaternion.identity, 0);
 		}
+		return null;
 	}
 
-	public void CreateGameSceneCharactor(int charactorType)
+	public void InitPlayerType(int charactorType)
 	{
 		playerTypeInit ();
-		if (type == 1)
+		if (type == (int)PLAYER_TYPE.PACMAN)
 		{
-			PhotonNetwork.Instantiate (playerType[charactorType-1], new Vector3(0f, -2f, 0f), Quaternion.identity, 0);
+			PhotonNetwork.Instantiate (playerType[(int)PLAYER_TYPE.PACMAN], new Vector3(0f, -2f, 0f), Quaternion.identity, 0);
 		}
 		else
 		{
@@ -52,10 +79,10 @@ public class CreatePlayer : Photon.MonoBehaviour
 	void playerTypeInit()
 	{
 		playerType = new Dictionary<int, string> ();
-		playerType [0] = pacmanName;
-		playerType [1] = redMonsterName;
-		playerType [2] = blueMonsterName;
-		playerType [3] = greenMonsterName;
-		playerType [4] = pinkMonsterName;
+		playerType [(int)PLAYER_TYPE.PACMAN] = pacmanName;
+		playerType [(int)PLAYER_TYPE.RED_MONSTER] = redMonsterName;
+		playerType [(int)PLAYER_TYPE.BLUE_MONSTER] = blueMonsterName;
+		playerType [(int)PLAYER_TYPE.GREEN_MONSTER] = greenMonsterName;
+		playerType [(int)PLAYER_TYPE.PINK_MONSTER] = pinkMonsterName;
 	}
 }

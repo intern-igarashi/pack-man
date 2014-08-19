@@ -5,12 +5,20 @@ public class EatDot : MonoBehaviour
 {
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+	{
 	
+	}
+
+	[RPC]
+	void IsEaten()
+	{
+		Destroy (gameObject);
 	}
 }

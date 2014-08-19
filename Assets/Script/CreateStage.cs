@@ -78,7 +78,10 @@ public class CreateStage : Photon.MonoBehaviour
 //		pathway = (GameObject)Resources.Load ("Prefab/pathway");
 //		dot = (GameObject)Resources.Load ("Prefab/dot");
 //		pacman = (GameObject)Resources.Load ("Prefab/pacman");
-		Create (height, width, stageData);
+		if (PhotonNetwork.isMasterClient)
+		{
+			Create (height, width, stageData);
+		}
 	}
 	
 	// Update is called once per frame

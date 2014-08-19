@@ -5,12 +5,13 @@ public class NetworkManager : MonoBehaviour
 {
 	GameObject playerMaker;
 
-	const string prefabPass = "Prefab/";
+	const string prefabPath = "Prefab/";
 	const string ROOM_NAME = "PAC MAN"; 
 
-	string playerPrefabName = prefabPass+"pacman";
+	string playerPrefabName = prefabPath+"pacman";
 	string playerName = "GUEST_AAA";
 
+	public bool isJoinedRoom = false;
 
 	void Awake()
 	{
@@ -47,6 +48,7 @@ public class NetworkManager : MonoBehaviour
 	{
 		Debug.Log ("ルームに入室しました");
 		StartGame ();
+		isJoinedRoom = true;
 	}
 
 	void OnPhotonRandomJoinFailed()
@@ -84,6 +86,7 @@ public class NetworkManager : MonoBehaviour
 
 	void StartGame()
 	{
+		PhotonNetwork.Instantiate ("Prefab/GameManager", Vector3.zero, Quaternion.identity, 0);
 		playerMaker = PhotonNetwork.Instantiate ("Prefab/PlayerMaker", Vector3.zero, Quaternion.identity, 0);
 		playerMaker.GetComponent<CreatePlayer> ().CreateRoomCharactor ();
 	}
