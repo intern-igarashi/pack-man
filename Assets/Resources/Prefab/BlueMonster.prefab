@@ -99,10 +99,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db929e5ece59d894ea4df0eb4b2abb1f, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d0e74aec1659bb47a89efc24e459483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beforeUpdatePosition: {x: 0, y: 0, z: 0}
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1

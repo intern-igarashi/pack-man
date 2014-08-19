@@ -1,15 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class EnemyControl : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-}
+fileFormatVersion: 2
+guid: 6e86e9658d1309340914ddb420d06ba3
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
