@@ -10,9 +10,10 @@ public class PlayerControl : Photon.MonoBehaviour
 
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
 	
-	// 1フレーム前のポジションを記憶
-	public Vector3 beforeUpdatePosition;
-	
+	// 1フレーム前のポジションを記憶.
+	Vector3 beforeUpdatePosition;
+	Vector3 velocity;
+
 	//
 	bool isHitWall;
 	bool isInit = false;
@@ -64,8 +65,11 @@ public class PlayerControl : Photon.MonoBehaviour
 				isInit = true;
 			}
 			float speed = MOVE_SPEED;
+
+//			Vector3 pos = transform.position;
+//			beforeUpdatePosition = new Vector3((int)pos.x, (int)pos.y, 0f);
+
 			beforeUpdatePosition = transform.position;
-			
 			
 			if (photonView.isMine)
 			{
@@ -119,37 +123,43 @@ public class PlayerControl : Photon.MonoBehaviour
 		}
 	}
 
-	void IsDead()
-	{
-		gameManager.SpawnNewCharactor (0, gameObject);
-	}
-
 	void OnTriggerEnter(Collider hit)
 	{
 		if (hit.transform.tag == "wall")
 		{
 			isHitWall = true;
-			transform.position = beforeUpdatePosition;
+
+			int revisX = Mathf.RoundToInt(beforeUpdatePosition.x);
+			int revisY = Mathf.RoundToInt(beforeUpdatePosition.y);
+			
+			transform.position = new Vector3((float)revisX, (float)revisY, 0f);
+
+//			transform.position = beforeUpdatePosition;
 		}
-		if (hit.transform.tag == "enemy")
+		else if (hit.transform.tag == "enemy")
 		{
-			IsDead();
+			PhotonView gameManagerPV = gameManager.GetComponent<PhotonView>();
+			gameManagerPV.RPC("EndGame", PhotonTargets.All);
 		}
 	}
 	
 	void OnTriggerStay(Collider hit)
 	{
-		PhotonView hitPhotonView;
-		hitPhotonView = hit.GetComponent<PhotonView>();
-		Debug.Log (hitPhotonView);
+//		PhotonView hitPhotonView;
+//		hitPhotonView = hit.GetComponent<PhotonView>();
+//		Debug.Log (hitPhotonView);
 		if (hit.transform.tag == "wall")
 		{
 			isHitWall = true;
-			transform.position = beforeUpdatePosition;
+
+			int revisX = Mathf.RoundToInt(beforeUpdatePosition.x);
+			int revisY = Mathf.RoundToInt(beforeUpdatePosition.y);
+
+			transform.position = new Vector3((float)revisX, (float)revisY, 0f);
 		}
 		else if (hit.transform.tag == "dot") 
 		{
-			hitPhotonView.RPC("IsEaten", PhotonTargets.All);
+			hit.gameObject.GetComponent<EatDot>().Eaten();
 		}
 	}
 }

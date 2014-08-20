@@ -1,24 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EatDot : MonoBehaviour
+public class EatDot : Photon.MonoBehaviour
 {
+	GameObject gameManager;
 
 	// Use this for initialization
 	void Start () 
 	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	
+		gameManager = GameObject.FindGameObjectWithTag ("GameManager");
 	}
 
-	[RPC]
-	void IsEaten()
+	public void Eaten()
 	{
-		Destroy (gameObject);
+		PhotonView gameManagerPV = gameManager.GetComponent<PhotonView> ();
+		gameManagerPV.RPC ("IncreaseDotCount", PhotonTargets.All);
+		PhotonNetwork.Destroy (this.gameObject);
 	}
 }
