@@ -12,6 +12,8 @@ public class GameManager : Photon.MonoBehaviour
 
 	NetworkManager networkManager;
 
+	PhotonView myPhotonView;
+
 	// Use this for initialization
 	void Awake () 
 	{
@@ -19,6 +21,7 @@ public class GameManager : Photon.MonoBehaviour
 		Application.targetFrameRate = 60;
 		DontDestroyOnLoad (gameObject);
 		networkManager = GameObject.Find ("NetworkManager").GetComponent<NetworkManager> ();
+		myPhotonView = this.gameObject.GetComponent<PhotonView> ();
 	}
 	
 	// Update is called once per frame
@@ -42,8 +45,7 @@ public class GameManager : Photon.MonoBehaviour
 			if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2 + 50, 100, 50), "Start Game!"))
 			{
 				PhotonNetwork.Instantiate("Prefab/StageCreator", Vector3.zero, Quaternion.identity, 0);
-				isPlayGame = true;
-
+				myPhotonView.RPC("StartGame", PhotonTargets.All);
 			}
 		}
 	}
@@ -59,4 +61,14 @@ public class GameManager : Photon.MonoBehaviour
 	public int GetControlPlayerType(){ return controlPlayerType;}
 
 	public int GetSelectLevel() { return stageLevel; }
+
+	[RPC]
+	void StartGame()
+	{
+		if (myPhotonView.isMine)
+		{
+			isPlayGame = true;
+		}
+	}
+
 }

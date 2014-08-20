@@ -50,7 +50,7 @@ public class EnemyControl : Photon.MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (isPlayGame)
+		if (gameManager.isPlayGame)
 		{
 			if (!isInit)
 			{
