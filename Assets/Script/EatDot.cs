@@ -15,6 +15,9 @@ public class EatDot : Photon.MonoBehaviour
 	{
 		PhotonView gameManagerPV = gameManager.GetComponent<PhotonView> ();
 		gameManagerPV.RPC ("IncreaseDotCount", PhotonTargets.All);
-		PhotonNetwork.Destroy (this.gameObject);
+		if (photonView.isMine)
+		{
+			PhotonNetwork.Destroy (this.gameObject);
+		}
 	}
 }

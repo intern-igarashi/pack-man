@@ -60,7 +60,6 @@ public class CreatePlayer : Photon.MonoBehaviour
 		{
 			return PhotonNetwork.Instantiate (playerType[type], new Vector3(((float)type-2.5f) * 3, 0f, 0f), Quaternion.identity, 0);
 		}
-		return null;
 	}
 
 	public void InitPlayerType(int charactorType)

@@ -28,5 +28,9 @@ public class ChangeCameraPosition : Photon.MonoBehaviour
 				transform.position = new Vector3(0f, 0f, -20f);
 			}
 		}
+		else
+		{
+			transform.position = new Vector3(0f, 0f, -10f);
+		}
 	}
 }

@@ -9,34 +9,21 @@ public class PlayerControl : Photon.MonoBehaviour
 	const float X_MIN = -9.5f;
 
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
+	Quaternion beforeRotation;
 	
 	// 1フレーム前のポジションを記憶.
 	Vector3 beforeUpdatePosition;
-	Vector3 velocity;
 
 	//
 	bool isHitWall;
 	bool isInit = false;
+	bool isPowerUp = false;
 	
 	GameManager gameManager;
 
 	PhotonView myPhotonView;
-	
-	Dictionary<int, Vector3> initPosition;
-	
-//	void PositionInit()
-//	{
-//		Vector3[] Pos = {
-//			new Vector3(0f, -2f, 0f), new Vector3(0f, 0f, 0f),
-//			new Vector3(-1f, 0f, 0f), new Vector3(0f, 0f, 0f),
-//			new Vector3(1f, 0f, 0f)
-//		};
-//		for (int itr = 0; itr < Pos.Length; itr++)
-//		{
-//			initPosition[itr] = Pos[itr];
-//		}
-//	}
-	
+
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -45,8 +32,6 @@ public class PlayerControl : Photon.MonoBehaviour
 		isHitWall = false;
 		collider.isTrigger = true;
 		gameManager = GameObject.FindWithTag ("GameManager").GetComponent<GameManager>();
-		initPosition = new Dictionary<int, Vector3> ();
-//		PositionInit ();
 		myPhotonView = PhotonView.Get (this);
 		if (!myPhotonView.isMine)
 		{
@@ -64,49 +49,63 @@ public class PlayerControl : Photon.MonoBehaviour
 				transform.position = new Vector3(0f, -2f, 0f);
 				isInit = true;
 			}
+
 			float speed = MOVE_SPEED;
 
-//			Vector3 pos = transform.position;
-//			beforeUpdatePosition = new Vector3((int)pos.x, (int)pos.y, 0f);
-
 			beforeUpdatePosition = transform.position;
-			
+			beforeRotation = transform.rotation;
+
 			if (photonView.isMine)
 			{
 				GetInputKey();
 			}
+
+
+			if (Physics.Raycast(transform.position, Vector3.forward, 1f))
+			{
+				isHitWall = true;
+				Debug.Log ("hit");
+			}
+			if (Physics.Raycast(transform.position - Vector3.left, Vector3.forward, 1f))
+			{
+				isHitWall = true;
+				Debug.Log ("hit");	
+			}
+			if (Physics.Raycast(transform.position - Vector3.right, Vector3.forward, 1f))
+			{
+				isHitWall = true;
+				Debug.Log ("hit");
+			}
 			
 			if (isHitWall)
 			{
-				speed = 0;
+				transform.rotation = beforeRotation;
 			}
-			
+
 			transform.position += transform.forward * speed * Time.deltaTime;
-			
+
 			WarpPosition();
 		}
 	}
 	
 	void GetInputKey()
 	{
+		isHitWall = false;
+
 		if (Input.GetKeyDown (KeyCode.UpArrow)) 
 		{
-			isHitWall = false;
 			transform.rotation = START_ROTATION*Quaternion.Euler (-90, 0 , 0);
 		}
 		else if (Input.GetKeyDown(KeyCode.DownArrow))
 		{
-			isHitWall = false;
 			transform.rotation = START_ROTATION*Quaternion.Euler (90, 0 , 0);
 		}
 		else if (Input.GetKeyDown(KeyCode.RightArrow))
 		{
-			isHitWall = false;
 			transform.rotation = START_ROTATION*Quaternion.Euler (180, 0 , 0);
 		}
 		else if (Input.GetKeyDown(KeyCode.LeftArrow))
 		{
-			isHitWall = false;
 			transform.rotation = START_ROTATION*Quaternion.Euler (0, 0 , 0);
 		}
 	}
@@ -129,17 +128,31 @@ public class PlayerControl : Photon.MonoBehaviour
 		{
 			isHitWall = true;
 
-			int revisX = Mathf.RoundToInt(beforeUpdatePosition.x);
-			int revisY = Mathf.RoundToInt(beforeUpdatePosition.y);
-			
-			transform.position = new Vector3((float)revisX, (float)revisY, 0f);
+			int offsetX = Mathf.RoundToInt(beforeUpdatePosition.x);
+			int offsetY = Mathf.RoundToInt(beforeUpdatePosition.y);
+			float revisX = beforeUpdatePosition.x;
+			float revisY = beforeUpdatePosition.y;
+
+			if (Mathf.Abs(revisX - offsetX) < 0.1f)
+			{
+				revisX = Mathf.Round(beforeUpdatePosition.x);
+			}
+			if (Mathf.Abs(revisY - offsetY) < 0.1f)
+			{
+				revisY = Mathf.Round(beforeUpdatePosition.y);
+			}
+
+			transform.position = new Vector3(revisX, revisY, 0f);
 
 //			transform.position = beforeUpdatePosition;
 		}
-		else if (hit.transform.tag == "enemy")
+		else if (hit.transform.tag == "enemy" && gameManager.isPlayGame)
 		{
-			PhotonView gameManagerPV = gameManager.GetComponent<PhotonView>();
-			gameManagerPV.RPC("EndGame", PhotonTargets.All);
+			if (!isPowerUp)
+			{
+				PhotonView gameManagerPV = gameManager.GetComponent<PhotonView>();
+				gameManagerPV.RPC("EndGame", PhotonTargets.All);
+			}
 		}
 	}
 	
@@ -152,14 +165,36 @@ public class PlayerControl : Photon.MonoBehaviour
 		{
 			isHitWall = true;
 
-			int revisX = Mathf.RoundToInt(beforeUpdatePosition.x);
-			int revisY = Mathf.RoundToInt(beforeUpdatePosition.y);
+			int offsetX = Mathf.RoundToInt(beforeUpdatePosition.x);
+			int offsetY = Mathf.RoundToInt(beforeUpdatePosition.y);
+			float revisX = beforeUpdatePosition.x;
+			float revisY = beforeUpdatePosition.y;
+			
+			if (Mathf.Abs(revisX - offsetX) < 0.2f)
+			{
+				revisX = Mathf.Round(beforeUpdatePosition.x);
+			}
+			if (Mathf.Abs(revisY - offsetY) < 0.2f)
+			{
+				revisY = Mathf.Round(beforeUpdatePosition.y);
+			}
 
-			transform.position = new Vector3((float)revisX, (float)revisY, 0f);
+			transform.position = new Vector3(revisX, revisY, 0f);
 		}
 		else if (hit.transform.tag == "dot") 
 		{
 			hit.gameObject.GetComponent<EatDot>().Eaten();
 		}
+		else if (hit.transform.tag == "powerDot")
+		{
+			hit.gameObject.GetComponent<EatDot>().Eaten();
+			myPhotonView.RPC("PowerUp", PhotonTargets.All);
+		}
+	}
+
+	[RPC]
+	void PowerUp()
+	{
+		isPowerUp = true;
 	}
 }

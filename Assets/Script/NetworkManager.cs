@@ -8,8 +8,8 @@ public class NetworkManager : MonoBehaviour
 	const string prefabPath = "Prefab/";
 	const string ROOM_NAME = "PAC MAN"; 
 
-	string playerPrefabName = prefabPath+"pacman";
 	string playerName = "GUEST_AAA";
+	string roomName = ROOM_NAME;
 
 	public bool isJoinedRoom = false;
 
@@ -36,7 +36,6 @@ public class NetworkManager : MonoBehaviour
 	void OnJoinedLobby()
 	{
 		Debug.Log ("ロビーに入りました");
-		PhotonNetwork.JoinRandomRoom ();
 	}
 
 	void OnCreatedRoom()
@@ -54,34 +53,45 @@ public class NetworkManager : MonoBehaviour
 	void OnPhotonRandomJoinFailed()
 	{
 		Debug.Log ("ルームに入室に失敗しました");
-		PhotonNetwork.CreateRoom (ROOM_NAME,true, true, 4);
 	}
 
-//	IEnumerator OnLeftRoom()
-//	{
-//		while (PhotonNetwork.room != null || PhotonNetwork.connected == false) 
-//		{
-//			yield return 0;
-//		}
-//
-//		Application.LoadLevel (Application.loadedLevel);
-//	}
-
-//	void OnGUI()
-//	{
-//		if (PhotonNetwork.room == null) 
-//		{
-//			return;
-//		}
-//		if (GUILayout.Button ("Leave & Quit")) 
-//		{
-//			PhotonNetwork.LeaveRoom();
-//		}
-//	}
+	void OnMasterClientSwitched()
+	{
+		PhotonNetwork.LeaveRoom ();
+		isJoinedRoom = false;
+	}
 
 	void OnGUI()
 	{
 		GUILayout.Label (PhotonNetwork.connectionStateDetailed.ToString());
+
+		if (!isJoinedRoom)
+		{
+			this.roomName = GUILayout.TextField (this.roomName);
+			
+			if (GUILayout.Button("Create Room", GUILayout.Width(100)))
+			{
+				PhotonNetwork.CreateRoom(this.roomName, true, true, 4);
+			}
+			foreach (RoomInfo game in PhotonNetwork.GetRoomList())
+			{
+				if (GUILayout.Button("\"" + game.name + "\"" + " Join Room" + " " + game.playerCount + "/" + game.maxPlayers))
+				{
+					PhotonNetwork.JoinRoom(this.roomName);
+				}
+			}
+		}
+		else
+		{
+			if (PhotonNetwork.playerList.Length == 1)
+			{
+				if (GUILayout.Button("Leave Room", GUILayout.Width(100)))
+				{
+					PhotonNetwork.LeaveRoom();
+					isJoinedRoom = false;
+				}
+			}
+		}
 	}
 
 	void StartGame()

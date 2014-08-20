@@ -9,36 +9,33 @@ public class EnemyControl : Photon.MonoBehaviour
 	const float X_MIN = -9.5f;
 	
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
-	
+	Quaternion beforeRotation;
+
 	// 1フレーム前のポジションを記憶
 	public Vector3 beforeUpdatePosition;
 	
 	//
 	bool isHitWall;
 	bool isInit = false;
-	bool isPlayGame = false;
-	
+
 	GameManager gameManager;
 	
 	Dictionary<int, Vector3> initPosition;
 	
 	void PositionInit()
 	{
-		Vector3[] Pos = {
-			new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0f),
-			new Vector3(-1f, 0f, 0f), new Vector3(0f, 0f, 0f),
-			new Vector3(1f, 0f, 0f)
-		};
-		for (int itr = 0; itr < Pos.Length; itr++)
-		{
-			initPosition[itr] = Pos[itr];
-		}
+		initPosition [1] = new Vector3 (-1f, 0f, 0f);
+		initPosition [2] = new Vector3 (-1f, 0f, 0f);
+		initPosition [3] = new Vector3 (0f, 0f, 0f);
+		initPosition [4] = new Vector3 (1f, 0f, 0f);
+		initPosition [5] = new Vector3 (1f, 0f, 0f);	
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
 		transform.rotation = START_ROTATION;
+		beforeRotation = transform.rotation;
 		beforeUpdatePosition = transform.position;
 		isHitWall = false;
 		collider.isTrigger = true;
@@ -65,10 +62,15 @@ public class EnemyControl : Photon.MonoBehaviour
 			{
 				GetInputKey();
 			}
+
+			if (Physics.Raycast(transform.position, Vector3.forward, 1f))
+			{
+				isHitWall = true;
+			}
 			
 			if (isHitWall)
 			{
-				speed = 0;
+				transform.rotation = beforeRotation;
 			}
 			
 			transform.position += transform.forward * speed * Time.deltaTime;
@@ -119,13 +121,22 @@ public class EnemyControl : Photon.MonoBehaviour
 		if (hit.transform.tag == "wall")
 		{
 			isHitWall = true;
-			transform.position = beforeUpdatePosition;
-		}
-	}
 
-	[RPC]
-	void StartGame()
-	{
-		isPlayGame = true;
+			int offsetX = Mathf.RoundToInt(beforeUpdatePosition.x);
+			int offsetY = Mathf.RoundToInt(beforeUpdatePosition.y);
+			float revisX = beforeUpdatePosition.x;
+			float revisY = beforeUpdatePosition.y;
+			
+			if (Mathf.Abs(revisX - offsetX) < 0.1f)
+			{
+				revisX = Mathf.Round(beforeUpdatePosition.x);
+			}
+			if (Mathf.Abs(revisY - offsetY) < 0.1f)
+			{
+				revisY = Mathf.Round(beforeUpdatePosition.y);
+			}
+			
+			transform.position = new Vector3(revisX, revisY, 0f);
+		}
 	}
 }

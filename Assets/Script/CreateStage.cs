@@ -10,7 +10,7 @@ public class CreateStage : Photon.MonoBehaviour
 	string cube = "cube";
 	string pathway = "pathway";
 	string dot = "dot";
-	string pacman = "pacman";
+	string powerDot = "powerDot";
 	
 	// 外部ファイルからのデータ
 	string[] stageData;
@@ -29,8 +29,9 @@ public class CreateStage : Photon.MonoBehaviour
 	
 	void ObjectTypeInit()
 	{
-		string[] ObjectName = {
-			cube, pathway, dot, null, null, null, null, pacman
+		string[] ObjectName = 
+		{
+			cube, pathway, dot, powerDot
 		};
 		for (int itr = 0; itr < ObjectName.Length; itr++) 
 		{
@@ -42,8 +43,7 @@ public class CreateStage : Photon.MonoBehaviour
 	void Create(int h, int w, string[] date)
 	{
 		string createObject = null;
-		int playerNum = 0;
-		
+
 		ObjectTypeInit ();
 		for (int y = 0; y < h; y++) 
 		{
@@ -52,11 +52,10 @@ public class CreateStage : Photon.MonoBehaviour
 				//string dateType = date[y*w+x];
 				createObject = ObjectType[date[y*w+x]];
 				PhotonNetwork.Instantiate (createObject, new Vector3(x+OFFSET_X, -y+OFFSET_Y, 0f), Quaternion.identity, 0);
-//				if (createObject == pacman)
-//				{
-//					PlayerStartArrayPos[playerNum] = y*w+x;
-//					playerNum++;
-//				}
+				if (createObject == powerDot)
+				{
+					Debug.Log(ObjectType[date[y*w+x]]);
+				}
 			}
 		}
 	}

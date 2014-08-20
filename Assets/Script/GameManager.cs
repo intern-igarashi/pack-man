@@ -4,7 +4,6 @@ using System.Collections;
 public class GameManager : Photon.MonoBehaviour
 {
 	int stageLevel;
-	int playerCount = 0;
 
 	public bool isPlayGame = false;
 	public int controlPlayerType;
@@ -26,6 +25,7 @@ public class GameManager : Photon.MonoBehaviour
 	void Awake () 
 	{
 		stageLevel = (int)UnityEngine.Random.Range(0f, 1.9f);
+		controlPlayerType = PhotonNetwork.playerList.Length;
 		Application.targetFrameRate = 60;
 		DontDestroyOnLoad (gameObject);
 		networkManager = GameObject.Find ("NetworkManager").GetComponent<NetworkManager> ();
@@ -48,6 +48,10 @@ public class GameManager : Photon.MonoBehaviour
 			}
 			afterStartGameTime += Time.deltaTime;
 		}
+		else
+		{
+			afterStartGameTime = 0f;
+		}
 	}
 
 	void OnGUI()
@@ -60,7 +64,7 @@ public class GameManager : Photon.MonoBehaviour
 		}
 		if (!isPlayGame && PhotonNetwork.isMasterClient)
 		{
-			if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2 + 50, 100, 50), "Start Game!"))
+			if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2 + 200, 100, 50), "Start Game!"))
 			{
 				PhotonNetwork.Instantiate("Prefab/StageCreator", Vector3.zero, Quaternion.identity, 0);
 				myPhotonView.RPC("StartGame", PhotonTargets.All);
@@ -70,23 +74,25 @@ public class GameManager : Photon.MonoBehaviour
 		if (isPlayGame)
 		{
 			font.fontSize = 20;
-			GUI.TextArea(new Rect(0, Screen.height/2-270, 100, 20), "GET DOTS", font);
-			GUI.TextArea(new Rect(0, Screen.height/2-250, 100, 20), getDotCount.ToString() + " / " + targetDotCount.ToString(), font);
+			GUI.TextArea(new Rect(0, Screen.height/2-170, 100, 20), "GET DOTS", font);
+			GUI.TextArea(new Rect(0, Screen.height/2-150, 100, 20), getDotCount.ToString() + " / " + targetDotCount.ToString(), font);
 		}
 
 		if (isEndGame)
 		{
 			isPlayGame = false;
 			string resultMessage = null;
-			font.fontSize = 60;
+			font.fontSize = 120;
 			if (isPlayerWin)
 			{
 				if (PhotonNetwork.isMasterClient)
 				{
+					font.normal.textColor = Color.red;
 					resultMessage = "WIN!";
 				}
 				else
 				{
+					font.normal.textColor = Color.blue;
 					resultMessage = "LOSS";
 				}
 			}
@@ -94,10 +100,12 @@ public class GameManager : Photon.MonoBehaviour
 			{
 				if (PhotonNetwork.isMasterClient)
 				{
+					font.normal.textColor = Color.blue;
 					resultMessage = "LOSS";
 				}
 				else
 				{
+					font.normal.textColor = Color.red;
 					resultMessage = "WIN!";
 				}
 			}
@@ -128,10 +136,12 @@ public class GameManager : Photon.MonoBehaviour
 	void GetDotCount()
 	{
 		GameObject[] dots = GameObject.FindGameObjectsWithTag ("dot");
+		getDotCount = -1;
 		MaxDotCount = dots.Length;
 		if (MaxDotCount > 0)
 		{
 			targetDotCount = MaxDotCount / 3;
+			getDotCount = 0;
 		}
 //		Debug.Log (getDotCount);
 	}
