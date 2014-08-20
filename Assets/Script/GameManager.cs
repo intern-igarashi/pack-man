@@ -4,11 +4,13 @@ using System.Collections;
 public class GameManager : Photon.MonoBehaviour
 {
 	int stageLevel = 0;
+	int playerCount = 0;
 
 	public bool isPlayGame = false;
 
-	GameObject[] dots;
-	public int controlPlayerType;	
+	public int controlPlayerType;
+
+	NetworkManager networkManager;
 
 	// Use this for initialization
 	void Awake () 
@@ -16,6 +18,7 @@ public class GameManager : Photon.MonoBehaviour
 		stageLevel = 0;
 		Application.targetFrameRate = 60;
 		DontDestroyOnLoad (gameObject);
+		networkManager = GameObject.Find ("NetworkManager").GetComponent<NetworkManager> ();
 	}
 	
 	// Update is called once per frame
@@ -26,19 +29,29 @@ public class GameManager : Photon.MonoBehaviour
 //		{
 //			Debug.Log("clear");
 //		}
-
 	}
 
 	void OnGUI()
 	{
-		if (!isPlayGame)
+		if (!networkManager.isJoinedRoom)
 		{
-			if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2 -50, 100, 50), "Start Game!"))
+			return;
+		}
+		if (!isPlayGame && PhotonNetwork.isMasterClient)
+		{
+			if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2 + 50, 100, 50), "Start Game!"))
 			{
 				PhotonNetwork.Instantiate("Prefab/StageCreator", Vector3.zero, Quaternion.identity, 0);
 				isPlayGame = true;
+
 			}
 		}
+	}
+
+	public void SpawnNewCharactor(int playerType, GameObject target)
+	{
+		PhotonNetwork.Instantiate ("Prefab/BlueMonster", Vector3.zero, Quaternion.identity, 0);
+		PhotonNetwork.Destroy(target);
 	}
 
 	public void SetControlPlayerType(int type){ controlPlayerType = type; }
@@ -46,7 +59,4 @@ public class GameManager : Photon.MonoBehaviour
 	public int GetControlPlayerType(){ return controlPlayerType;}
 
 	public int GetSelectLevel() { return stageLevel; }
-	
-	public void SetStageLevel(int level) { stageLevel = level; }
-
 }

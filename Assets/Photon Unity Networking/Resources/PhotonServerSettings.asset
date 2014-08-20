@@ -32,4 +32,7 @@ MonoBehaviour:
   - RequestForPickupTimes
   - SetPosition
   - TaggedPlayer
+  - IsEaten
+  - AddPlayer
+  - StartGame
   DisableAutoOpenWizard: 0

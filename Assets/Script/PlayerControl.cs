@@ -4,13 +4,10 @@ using System.Collections.Generic;
 
 public class PlayerControl : Photon.MonoBehaviour
 {
-
-	//
 	const float MOVE_SPEED = 1.5f;
 	const float X_MAX = 9.5f;
 	const float X_MIN = -9.5f;
-	
-	//
+
 	Quaternion START_ROTATION = Quaternion.Euler (0, -90, 0);
 	
 	// 1フレーム前のポジションを記憶
@@ -20,22 +17,24 @@ public class PlayerControl : Photon.MonoBehaviour
 	bool isHitWall;
 	bool isInit = false;
 	
-	GameObject gameManager;
+	GameManager gameManager;
+
+	PhotonView myPhotonView;
 	
 	Dictionary<int, Vector3> initPosition;
 	
-	void PositionInit()
-	{
-		Vector3[] Pos = {
-			new Vector3(0f, -2f, 0f), new Vector3(-1f, 0f, 0f),
-			new Vector3(-1f, 0f, 0f), new Vector3(0f, 0f, 0f),
-			new Vector3(1f, 0f, 0f)
-		};
-		for (int itr = 0; itr < Pos.Length; itr++)
-		{
-			initPosition[itr] = Pos[itr];
-		}
-	}
+//	void PositionInit()
+//	{
+//		Vector3[] Pos = {
+//			new Vector3(0f, -2f, 0f), new Vector3(0f, 0f, 0f),
+//			new Vector3(-1f, 0f, 0f), new Vector3(0f, 0f, 0f),
+//			new Vector3(1f, 0f, 0f)
+//		};
+//		for (int itr = 0; itr < Pos.Length; itr++)
+//		{
+//			initPosition[itr] = Pos[itr];
+//		}
+//	}
 	
 	// Use this for initialization
 	void Start () 
@@ -44,19 +43,24 @@ public class PlayerControl : Photon.MonoBehaviour
 		beforeUpdatePosition = transform.position;
 		isHitWall = false;
 		collider.isTrigger = true;
-		gameManager = GameObject.FindWithTag ("GameManager");
+		gameManager = GameObject.FindWithTag ("GameManager").GetComponent<GameManager>();
 		initPosition = new Dictionary<int, Vector3> ();
-		PositionInit ();
+//		PositionInit ();
+		myPhotonView = PhotonView.Get (this);
+		if (!myPhotonView.isMine)
+		{
+			this.enabled = false;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (gameManager.GetComponent<GameManager>().isPlayGame)
+		if (gameManager.isPlayGame)
 		{
 			if (!isInit)
 			{
-				transform.position = initPosition[gameManager.GetComponent<GameManager>().GetControlPlayerType()];
+				transform.position = new Vector3(0f, -2f, 0f);
 				isInit = true;
 			}
 			float speed = MOVE_SPEED;
@@ -73,16 +77,9 @@ public class PlayerControl : Photon.MonoBehaviour
 				speed = 0;
 			}
 			
-			transform.position += transform.forward*speed*Time.deltaTime;
+			transform.position += transform.forward * speed * Time.deltaTime;
 			
-			if (transform.position.x < X_MIN) 
-			{
-				transform.position = new Vector3(X_MAX, transform.position.y, 0);
-			}
-			else if (transform.position.x > X_MAX) 
-			{
-				transform.position = new Vector3(X_MIN, transform.position.y, 0);
-			}
+			WarpPosition();
 		}
 	}
 	
@@ -109,26 +106,50 @@ public class PlayerControl : Photon.MonoBehaviour
 			transform.rotation = START_ROTATION*Quaternion.Euler (0, 0 , 0);
 		}
 	}
-	
-	void OnTriggerEnter(Collider collider)
+
+	void WarpPosition()
 	{
-		if (collider.transform.tag == "wall")
+		if (transform.position.x < X_MIN) 
+		{
+			transform.position = new Vector3(X_MAX, transform.position.y, 0);
+		}
+		else if (transform.position.x > X_MAX) 
+		{
+			transform.position = new Vector3(X_MIN, transform.position.y, 0);
+		}
+	}
+
+	void IsDead()
+	{
+		gameManager.SpawnNewCharactor (0, gameObject);
+	}
+
+	void OnTriggerEnter(Collider hit)
+	{
+		if (hit.transform.tag == "wall")
 		{
 			isHitWall = true;
 			transform.position = beforeUpdatePosition;
+		}
+		if (hit.transform.tag == "enemy")
+		{
+			IsDead();
 		}
 	}
 	
 	void OnTriggerStay(Collider hit)
 	{
-		if (collider.transform.tag == "wall")
+		PhotonView hitPhotonView;
+		hitPhotonView = hit.GetComponent<PhotonView>();
+		Debug.Log (hitPhotonView);
+		if (hit.transform.tag == "wall")
 		{
 			isHitWall = true;
 			transform.position = beforeUpdatePosition;
 		}
 		else if (hit.transform.tag == "dot") 
 		{
-			PhotonNetwork.Destroy(hit.gameObject);
+			hitPhotonView.RPC("IsEaten", PhotonTargets.All);
 		}
 	}
 }
