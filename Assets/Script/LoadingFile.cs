@@ -10,11 +10,13 @@ public class LoadingFile : MonoBehaviour
 	public int WIDTH = 19;
 	public int HEIGHT = 23;
 
+	const string FILE_PATH = "StageData/";
+
 	// 外部ファイルからのデータを保存
 	string[] stageDataArray;
 
 	// 読み込むすべてのファイル
-	string[] ALL_FILE_NAME = {"StageData/stage_date", "stage_date_2"};
+	string[] ALL_FILE_NAME = {"stage_date", "stage_date_2"};
 
 	//
 	//string filePass = "StageData/";
@@ -33,7 +35,7 @@ public class LoadingFile : MonoBehaviour
 		loadFile = new Dictionary<int, string>();
 		for (int itr = 0; itr < ALL_FILE_NAME.Length; itr++) 
 		{
-			loadFile[itr] = ALL_FILE_NAME[itr];
+			loadFile[itr] = FILE_PATH + ALL_FILE_NAME[itr];
 		}
 	}
 

@@ -35,4 +35,8 @@ MonoBehaviour:
   - IsEaten
   - AddPlayer
   - StartGame
+  - EndGame
+  - DecreaseDotCount
+  - PlayerWin
+  - GetDotCount
   DisableAutoOpenWizard: 0

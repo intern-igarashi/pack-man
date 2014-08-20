@@ -86,7 +86,10 @@ public class NetworkManager : MonoBehaviour
 
 	void StartGame()
 	{
-		PhotonNetwork.Instantiate ("Prefab/GameManager", Vector3.zero, Quaternion.identity, 0);
+		if (PhotonNetwork.isMasterClient)
+		{
+			PhotonNetwork.Instantiate ("Prefab/GameManager", Vector3.zero, Quaternion.identity, 0);
+		}
 		playerMaker = PhotonNetwork.Instantiate ("Prefab/PlayerMaker", Vector3.zero, Quaternion.identity, 0);
 		playerMaker.GetComponent<CreatePlayer> ().CreateRoomCharactor ();
 	}
