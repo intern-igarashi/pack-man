@@ -39,4 +39,5 @@ MonoBehaviour:
   - DecreaseDotCount
   - PlayerWin
   - GetDotCount
+  - IncreaseDotCount
   DisableAutoOpenWizard: 0
