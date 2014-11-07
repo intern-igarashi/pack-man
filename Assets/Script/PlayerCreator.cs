@@ -4,11 +4,10 @@ using System.Collections.Generic;
 
 public class PlayerCreator : Photon.MonoBehaviour 
 {
-	Dictionary <int, string> characterPath;
+	Dictionary <int, string> characterPathDict;
 
-	// file path
-	const string prefabPath = "Prefab/";
-	string[] createCharactorPath = {
+	const string prefabDirectoryPath = "Prefab/";
+	string[] characterPrefabFileNames = {
 		"pacman", "redMonster", "blueMonster", "greenMonster", "pinkMonster"
 	};
 
@@ -23,12 +22,12 @@ public class PlayerCreator : Photon.MonoBehaviour
 	
 	void InitCharacterType ()
 	{
-		characterPath = new Dictionary <int, string> ();
-		const int init_charactor_num_max = createCharactorPath.Length + PLAYER_TYPE.PACMAN;
+		characterPathDict = new Dictionary <int, string> ();
+		const int init_charactor_num_max = characterPrefabFileNames.Length + PLAYER_TYPE.PACMAN;
 
 		for ( int i = PLAYER_TYPE.PACMAN; i < init_charactor_num_max; i++ )
 		{
-			characterPath [i] = prefabPath + createCharactorPath [i];
+			characterPathDict [i] = prefabDirectoryPath + characterPrefabFileNames [i];
 		}
 	}
 
@@ -45,7 +44,7 @@ public class PlayerCreator : Photon.MonoBehaviour
 		{
 			creationPos = new Vector3 ((float)characterType - 3f, 0f, 0f);
 		}
-		PhotonNetwork.Instantiate (characterPath [characterType], creationPos, Quaternion.identity, 0);
+		PhotonNetwork.Instantiate (characterPathDict [characterType], creationPos, Quaternion.identity, 0);
 	}
 
 	public GameObject CreateRoomCharacter ()
@@ -55,6 +54,6 @@ public class PlayerCreator : Photon.MonoBehaviour
 
 		Vector3 creationPos = new Vector3 (((float)characterType - 2.5f) * 3, 0f, 0f);
 	
-		return PhotonNetwork.Instantiate (characterPath [characterType], creationPos, Quaternion.identity, 0);
+		return PhotonNetwork.Instantiate (characterPathDict [characterType], creationPos, Quaternion.identity, 0);
 	}
 }
